@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper SYSTEM 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sanyang.mapper.DeveloperCompanymapper">
+
+<resultMap type="DeveloperCompany" id="DeveloperCompanymap">
+<collection property="projects" column="did" select="getProjects"></collection>
+</resultMap>
+
+<select id="getProjects" parameterType="int" resultType="Project"> 
+select * from Project where dtid = #{value}
+</select>
+
+<select id="getAllDeveloperCompany" resultMap="DeveloperCompanymap">
+select * from DeveloperCompany
+</select>
+
+<insert id="addDeveloperCompany" parameterType="DeveloperCompany">
+      <selectKey resultType="int" order="BEFORE" keyProperty="did">
+          select seq_did.nextval from dual
+      </selectKey>
+insert into DeveloperCompany values(seq_did.nextval,#{companyname},#{companyaddress},#{corporation},#{companytel},to_date(#{createddate},'yyyy-mm-dd'))
+</insert>
+
+<insert id="addProject" parameterType="Project">
+insert into Project values(seq_pid.nextval,#{dtid},#{proname},#{proaddress},to_date(#{begindate},'yyyy-mm-dd'),to_date(#{enddate},'yyyy-mm-dd'),#{principal},#{ischeck})
+</insert>
+
+
+</mapper>
